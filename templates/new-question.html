@@ -3,25 +3,35 @@
 <head>
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/static/question.css">
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
     <!-- New question template -->
 </head>
 
 <body>
-    <p><h1>{{ title }}</h1></p>
+    <p>
+        <h1>{{ title }}</h1>
+    </p>
     <div id=question_table>
-    <form action="{{ action }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ action }}" method="POST" enctype="multipart/form-data">
+            <p>
+                <label for="title"><h3>Question Title</h3></label><br>
+                <input type="text" class="text_box" id="title" name="title" value="{{ data['title'] }}" required>
+            </p>
+            <p>
+                <label for="message"><h3>Question</h3></label><br>
+                <textarea class="text_box" id="message" name="message" type="text" rows="6" cols="30" minlength="10" required>{{ data['message'] }}</textarea>
+            </p>
+            <p>
+                <input type="file" name="file">
+            </p>
+
+                
+            {% for tag in tags %}
+                <input type="checkbox" name="{{ tag['name'] }}" value="{{ tag['name'] }}"> {{ tag['name'] }} <br>
+                
+            {% endfor %}
         <p>
-          <label for="title"><h3>Question Title</h3></label><br>
-          <input type="text" class="text_box" id="title" name="title" value="{{ data['title'] }}" required>
-        </p>
-        <p>
-          <label for="message"><h3>Question</h3></label><br>
-          <textarea class="text_box" id="message" name="message" type="text" rows="6" cols="30" minlength="10" required>{{ data['message'] }}</textarea>
-        </p>
-        <p>
-           <input type="file" name="file">
-        </p>
-        <p>
+        
             <input class ="button_atti button" type="submit"  id="send" value="Send"> 
             <a href="/list"><input class ="button_atti button" type="button" id="back" value="Back"></a>
         </p>

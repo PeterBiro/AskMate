@@ -21,9 +21,6 @@
                 <label for="answer">Your answer:</label>
             </h2>
         </p>
-        {% if error == "10 char":%}
-        Answer must be at least 10 characters long! <br>
-        {% endif %}
         {% if mode == "Send new" %}
         <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" placeholder="Although 42 is the aswer to life, the Universe and everything, you can be a bit more specific, and write at least 10 characters long answer." autofocus></textarea>
         {% elif mode == "Edit"%}

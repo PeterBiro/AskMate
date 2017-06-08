@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<head>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/style2.css">
+    <!-- New question template -->
+</head>
+
+<body>
+    <div id="title">
+        <h1>Ask Mate</h1><p id="head">There is no bad question!</p>
+    </div>
+    <div class="content">
+        <h2>{{ title }}</h2>
+        <div id=question_table>
+        <form action="{{ action }}" method="POST" enctype="multipart/form-data">
+            <h3>Question Title</h3>
+            <input type="text" name="title" value="{{ data['title'] }}" required>
+            <h3>Question</h3>
+            <textarea name="message" type="text" rows="6" cols="30" minlength="10" required>{{ data['message'] }}</textarea>
+            <br>
+            <label class="custom-file-upload">
+                <input type="file"/>
+                Picture
+            </label>
+            <input class="bluebutton" type="submit" value="Send"> 
+            <a href="/list"><input class ="bluebutton" type="button" value="Back"></a>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -1,6 +1,9 @@
 # Peter's sandbox
 peter.py
 
+# psql passwords etc
+private_psql_settings.py
+
 # Created by https://www.gitignore.io/api/python,pycharm,visualstudiocode
 
 ### PyCharm ###

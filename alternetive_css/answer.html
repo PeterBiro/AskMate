@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{mode}} answer</title>
+    <link rel="stylesheet" href="/static/style2.css">
+</head>
+
+<body>
+    <div id="title">
+        <h1>Ask Mate</h1><p id="head">There is no bad question!</p>
+    </div>
+    <div class="content">
+        <h2>Question</h2>
+        <h3>{{question["title"]}}:</h3>
+        <p>{{question["message"]}}</p>
+        {% if mode == "Edit" %}
+            <form method="POST" action='/answer/{{ answer["answer_id"] }}/edit'>
+        {% elif mode == "Send new" %}
+            <form method="POST" action='/question/{{ question["question_id"] }}/new-answer'>
+        {% endif %}
+        <h3>Your answer:</h3>
+        {% if mode == "Send new" %}
+            <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" placeholder="Although 42 is the aswer to life, the Universe and everything, you can be a bit more specific, and write at least 10 characters long answer." autofocus></textarea>
+        {% elif mode == "Edit"%}
+            <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" autofocus>{{ answer["message"] }}</textarea>
+        {% endif %}
+        <input class="bluebutton" type="submit" value="{{ mode }}">
+        <a href="/question/{{ question["question_id"] }}"><input class="bluebutton" type="button" value="Back to question" ></a>
+    </form>
+    </div>
+</body>
+</html>

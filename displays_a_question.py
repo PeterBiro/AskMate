@@ -1,65 +1,89 @@
 from flask import Flask, render_template, request, redirect
 import data_manager
 import datetime
+import common
 app = Flask(__name__)
 
 
-def vote_question_up(question_id):
-    vote("question", "question.csv", "up", question_id, "question_id")
-    return redirect("/question/{0}".format(question_id))
+def get_answers_for_question(question_id, sort_by, direction):
+    query = "SELECT * FROM answer WHERE question_id={0} ORDER BY {1} {2};".format(question_id, sort_by, direction)
+    rows = data_manager.run_query(query)
+    list_of_names = ["id", "submission_time", "vote_number", "question_id", "message"]
+    answers = data_manager.build_dict(rows, list_of_names)
+    return answers
 
 
-def vote_question_down(question_id):
-    vote("question", "question.csv", "down", question_id, "question_id")
-    return redirect("/question/{0}".format(question_id))
+def question_up(direction, question_id):
+    vote("question", direction, question_id)
 
 
-def vote_answer_up(question_id, answer_id):
-    vote("answer", "answer.csv", "up", answer_id, "answer_id")
-    return redirect("/question/{0}".format(question_id))
+def question_down(direction, question_id):
+    vote("question", direction, question_id)
 
 
-def vote_answer_down(question_id, answer_id):
-    vote("answer", "answer.csv", "down", answer_id, "answer_id")
-    return redirect("/question/{0}".format(question_id))
+def answer_up(direction, question_id, answer_id):
+    vote("answer", direction, question_id, answer_id)
 
 
-def vote(type_, filename, direction, id, key):
-    data = data_manager.get_dict(type_, filename)
-    for row in data:
-        if int(row[key]) == id:
-            if direction == "up":
-                row["vote_number"] = str(int(row["vote_number"]) + 1)
-            else:
-                row["vote_number"] = str(int(row["vote_number"]) - 1)
-    data_manager.save_dict(data, type_, filename)
+def answer_down(direction, question_id, answer_id):
+    vote("answer", direction, question_id, answer_id)
+
+
+def vote(type_, direction, id, answer_id=0):
+    if type_ == "question":
+        query = "SELECT vote_number FROM {0} WHERE id={1}".format(type_, id)
+    elif type_ == "answer":
+        query = "SELECT vote_number FROM {0} WHERE id={2} AND question_id = {1}".format(type_, id, answer_id)
+    else:
+        pass
+    updated_number = 0
+    vote_num = data_manager.run_query(query)
+    if direction == "vote-up" and vote_num:
+        updated_number = vote_num[0][0] + 1
+    elif direction == "vote-down" and vote_num:
+        updated_number = vote_num[0][0] - 1
+    else:
+        pass
+    if type_ == "question":
+        update_query = """UPDATE {0} SET vote_number = {1} WHERE id = {2}""".format(type_, updated_number, id)
+    elif type_ == "answer":
+        update_query = """UPDATE {0} SET vote_number = {1} WHERE id = {3}
+                       AND question_id = {2}""".format(type_, updated_number, id, answer_id)
+    else:
+        pass
+    data_manager.run_query(update_query)
 
 
 def displays_a_single_question(question_id):
 
-    list_of_key_of_question = ["question_id", "submisson_time", "view_number", "vote_number", "title", "message", "image"]
-    title_of_question = ["ID", "Submisson time", "View number", "Vote number", "Title", "Message", "Image"]
+    list_of_key_of_question = ["id", "submission_time", "view_number", "vote_number", "title", "message"]
+    title_of_question = ["ID", "Submisson time", "View number", "Vote number", "Title", "Message"]
     list_of_key_and_title_of_question = list(zip(list_of_key_of_question, title_of_question))
 
-    list_of_key_of_answer = ["answer_id", "submisson_time", "vote_number", "question_id", "message", "image"]
-    title_of_answer = ["ID", "Submisson time", "Vote number", "Question id", "Message", "Image"]
+    list_of_key_of_answer = ["id", "submission_time", "vote_number", "question_id", "message"]
+    title_of_answer = ["ID", "Submisson time", "Vote number", "Question id", "Message"]
     list_of_key_and_title_of_answers = list(zip(list_of_key_of_answer, title_of_answer))
 
-    data_question = data_manager.get_dict("question", "question.csv")
-    question = {}
-    for row in data_question:
-        if int(row["question_id"]) == question_id:
-            row["submisson_time"] = datetime.datetime.fromtimestamp(int(float(row["submisson_time"]))).strftime('%Y-%m-%d %H:%M:%S')
-            question = row
+    query = "SELECT * FROM question"
+    rows = data_manager.run_query(query)
+    list_of_names = ["id", "submission_time", "view_number", "vote_number", "title", "message"]
+    all_question = data_manager.build_dict(rows, list_of_names)
+    for question_ in all_question:
+        if question_id == question_["id"]:
+            question = question_
             break
 
-    data_answers = data_manager.get_dict("answer", "answer.csv")
+    query = "SELECT * FROM answer"
+    rows = data_manager.run_query(query)
+    list_of_names = ["id", "submission_time", "vote_number", "question_id", "message"]
+    all_answers = data_manager.build_dict(rows, list_of_names)
     answers = []
-    for row in data_answers:
-        if int(row["question_id"]) == question_id:
-            row["submisson_time"] = datetime.datetime.fromtimestamp(int(float(row["submisson_time"]))).strftime('%Y-%m-%d %H:%M:%S')
-            answers.append(row)
-    question_with_answers = {"question_id": question_id,
+    for answer in all_answers:
+        if question_id == answer["question_id"]:
+            answers.append(answer)
+    tags = common.read_tags(question_id)
+    question_with_answers = {"tags": tags,
+                             "question_id": question_id,
                              "question": question,
                              "answers": answers,
                              "list_of_key_of_question": list_of_key_of_question,
@@ -72,18 +96,5 @@ def displays_a_single_question(question_id):
     return question_with_answers
 
 
-def sort(data, sort_by, direction):
-    try:
-        sorted_data = sorted(data, key=lambda x: int(x[sort_by]), reverse=direction == "down")
-    except:
-        sorted_data = sorted(data, key=lambda x: x[sort_by], reverse=direction == "down")
-
-    return sorted_data
-
 if __name__ == "__main__":
     app.run(debug=True)
-
-
-
-
-

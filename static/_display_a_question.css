@@ -2,10 +2,30 @@ html{
     background-image: url("four_kyu_background.jpg");
     background-color: #cccccc;
     background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     width: 100%;
     height: 100%;
 }
+.text-box{
+    color: black;
+    text-align: left;
+}
+option{
+    color: black;
+}
 
+h2, h3{
+    -webkit-box-shadow: 26px 12px 37px 1px rgba(0,0,0,0.75);
+    -moz-box-shadow: 26px 12px 37px 1px rgba(0,0,0,0.75);
+    box-shadow: 26px 12px 37px 1px rgba(0,0,0,0.75);
+    width: 20%;
+    margin: 0% 0% 0% 40%;
+    text-align: center;
+}
+select{
+    color: black
+}
 .button{
     background-color: transparent;
     border-image: url("bambo_empty.png") 30 round;
@@ -22,10 +42,6 @@ box-shadow: inset 0px -4px 300px -96px rgba(0,0,0,0.75);
     border-width: 30px;
   text-decoration: none;
   font-size: 120%;
-  
-}
-.ask_new_question{
-   
 }
 
 h1{
@@ -35,6 +51,7 @@ h1{
     width: 20%;
     text-align: center;
 }
+
 table{
     margin: 0.5cm 2cm 2cm 0.5cm;
     border-image: url("bambo_empty.png") 30 round;
@@ -63,11 +80,25 @@ table{
     
 }
 
-*{
-    color: whitesmoke;
-    text-align: center; 
-}
 .add_new{
     border-color: transparent;
 }
 
+*{
+     color: whitesmoke;
+     text-align: center; 
+ }
+
+#search {
+    color: black;
+}
+
+.answer {
+margin-left: 150px;
+width: 50%;
+}
+
+mark {
+    color: black;
+    background-color: white;
+}

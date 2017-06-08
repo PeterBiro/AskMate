@@ -1,0 +1,177 @@
+body {
+    margin: 0;
+    background-color: #3871ad;
+    color: #13263a;
+    font-weight: bold;
+    font-size: 16px;
+ 
+}
+
+a {
+    text-decoration: none;
+    color: #19324d;
+}
+
+a:hower {
+    color: #254b74;
+}
+
+#title {
+    margin: 0;
+    background-color: #13263a;
+    background-image: url("four_kyu_h1.jpg");
+    background-repeat: no-repeat;
+    background-position: 450px 0px;
+    background-size: auto;
+}
+
+h1 {
+    margin: 0;
+    padding-top: 80px;
+    padding-left: 50px;
+    color: #ffeb99;
+    font-size: 84px;
+}
+
+#head {
+    margin: 0;
+    padding-left: 50px;
+    padding-bottom:  80px;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.content {
+    background-color: #ffeb99;
+    margin: 50px 50px 50px 50px;
+
+}
+
+h2 {
+    background-color: #1f3f60;
+    margin: 0;
+    padding: 10px;
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+h3 {
+    border-top: 15px solid #3871ad;
+    background-color: #2c5887;
+    margin: 0;
+    padding: 10px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+h4 {
+    border-top: 15px solid #3871ad;
+    margin: 0;
+    padding: 10px;
+    background-color: #8bb1da;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.add_new {
+    border-top: 15px solid #3871ad;
+}
+
+.comment {
+    border-left: 100px solid #3871ad;
+}
+
+p {
+    margin: 20px 0 20px 10px;
+}
+
+.bluebutton {
+    display: inline-block;
+    margin: 2px;
+    background-color: #3e7dc1;
+    border: none;
+    padding: 12px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.bluebutton:hover, .custom-file-upload:hover {
+    background-color: #32649a;
+}
+
+input[type=text] {
+    margin: 2px 0 2px 2px;
+    background-color: #b2cbe6;
+    border: none;
+    color: #19324d;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+select, input[type=number] {
+    margin: 2px 0 2px 2px;
+    background-color: #b2cbe6;
+    border: none;
+    color: #19324d;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    margin: 2px;
+    background-color: #3e7dc1;
+    border: none;
+    padding: 12px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+textarea {
+    width: 99%;
+    height: 150px;
+    padding: 12px 20px;
+    margin: 2px;
+    box-sizing: border-box;
+    background-color: #c5d8ec;
+    resize: none;
+    border: none;
+}
+
+table {
+    margin: 2px;
+    border-collapse: collapse;
+    width: 99%;
+}
+
+th {
+    background-color: #528ac7;
+    color: white;
+    font-size: 16 px;
+    font-weight: bold;
+    height: 40px;
+} 
+
+td {
+    border-bottom: 1px solid #528ac7;
+    color: #254b74;
+    font-size: 16 px;
+    font-weight: bold;
+    height: 40px
+}

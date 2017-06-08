@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/display_a_question.css">
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>Create new tag</h1>
+    <form action="/question/save_new_tag/<{{ rgb_color }}>" method='POST'>
+        <h3>Name of new tag</h3>
+        <input type="text" name="new_tag_name" style="color:black">
+        <a href="/question/create_new_tag"><input type="button" value="Creat random Color" style="color:black"></a>
+        <i class="fa fa-square" aria-hidden="true" style="color:{{ rgb_color }};font-size:40px"></i><br><br>
+        <h3>Choose color</h3>
+        <input class="text-box" type="number" name="red_color" maxlength="3" max="255" min="0" step="1"> Red 
+        <input class="text-box" type="number" name="green_color" maxlength="3" max="255" min="0" step="1"> Green
+        <input class="text-box" type="number" name="blue_color" maxlength="3" max="255" min="0" step="1">  Blue 
+        <input type="submit" value="Create new tag" style="color:black">
+    </form>
+
+</body>
+</html>

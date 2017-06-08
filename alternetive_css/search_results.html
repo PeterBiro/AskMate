@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Ask Mate</title>
+        <link rel="stylesheet" href="/static/style2.css">
+    </head>
+
+    <body>
+        <div id="title">
+            <h1>Ask Mate</h1><p id="head">There is no bad question!</p>
+        </div>
+
+         <div class="content">
+
+            <h2>Search results</h2>
+
+            {% for question in questions %}
+
+                <h3>{{question.question_id}}. {{question.title|safe}}</h3>
+                <p>{{question.message}}<br>@{{question.submission_time}}</p>
+
+                {% for answer in answers %}
+
+                    {% if question.question_id == answer.question_id %}
+
+                    <h4>{{answer.answer_id}}. answer</h4>
+                    <p>{{answer.message|safe}}</p>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endfor %}
+        <br>
+            <form action='/'>
+                <input class='bluebutton' type='submit' value='Back'>
+            </form>
+        </div>
+    </body>
+
+</html>

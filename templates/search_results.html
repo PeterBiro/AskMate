@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ask Mate</title>
+    <link rel="stylesheet" href="/static/display_a_question.css">
+</head>
+
+<body>
+
+<h1>Ask Mate</h1>
+<div class="ask_new_question">
+<h3>Search results</h3>
+</div>
+
+{% for question in questions %}
+
+    <table border="1">
+        {% for col in ['ID', 'Question', 'Date'] %}
+            <th>{{col}}</th>
+        {% endfor %}
+            <tr>
+                <td>{{question.question_id}}.</td>
+                <td>{{question.title|safe}}</td>
+                <td>{{question.submission_time}}</td>
+            </tr>
+            <tr>
+                <td colspan="3">{{question.message|safe}}</td>
+            </tr>
+    </table>
+
+    {% for answer in answers %}
+
+        {% if question.question_id == answer.question_id %}
+
+        <table class="answer" border="1">
+                <th>{{answer.answer_id}}</th>
+                <tr>
+                    <td colspan="3">{{answer.message|safe}}</td>
+                </tr>
+        </table>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endfor %}
+<p>
+    <form action='/'>
+        <input class='button' type='submit' value='Back'>
+    </form>
+</p>
+</body>
+
+</html>
