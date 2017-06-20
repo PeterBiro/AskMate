@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>{{mode}} answer</title>
-    <link rel="stylesheet" href="/static/answer.css">
+    <link rel="stylesheet" href="/static/display_a_question.css">
 </head>
 
 <body>
@@ -10,25 +10,35 @@
     <h1>Question</h1>
     <div>
     <h2>{{question["title"]}}:</h2>
-    <p>{{question["message"]}}</p>
-    {% if mode == "Edit" %}
+    <table border="1"><tr><td>{{question["message"]}}<td></tr></table>
+    {% if mode == "Edit" %}>
     <form method="POST" action='/answer/{{ answer["answer_id"] }}/edit'>
     {% elif mode == "Send new" %}
     <form method="POST" action='/question/{{ question["question_id"] }}/new-answer'>
     {% endif %}
         <p>
             <h2>
+                {% if mode == "Edit" %}
+                <label for="answer">{{ answer["user_name"] }}'s answer:</label>
+                {% elif mode == "Send new" %}
                 <label for="answer">Your answer:</label>
+                {% endif %}
             </h2>
         </p>
-        {% if error == "10 char":%}
-        Answer must be at least 10 characters long! <br>
-        {% endif %}
-        {% if mode == "Send new" %}
-        <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" placeholder="Although 42 is the aswer to life, the Universe and everything, you can be a bit more specific, and write at least 10 characters long answer." autofocus></textarea>
-        {% elif mode == "Edit"%}
-        <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" autofocus>{{ answer["message"] }}</textarea>
-        {% endif %}
+            {% if mode == "Send new" %}
+            <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" placeholder="Although 42 is the aswer to life, the Universe and everything, you can be a bit more specific, and write at least 10 characters long answer." autofocus></textarea>
+            {% elif mode == "Edit"%}
+            <textarea name="answer" id="answer" rows="4" cols="46" minlength="10" autofocus>{{ answer["message"] }}</textarea>
+            {% endif %}
+        <p>
+            {% if mode == "Send new" %}
+            <select name="user_id" class="user" >
+            {% for user in user_list %}
+                <option value="{{ user['id'] }}">{{ user['name'] }}</option>
+            {% endfor%}
+            </select>
+            {% endif %}
+        </p>
         <p>
             <input class="button" type="submit" value="{{ mode }}">
             <a href="/question/{{ question["question_id"] }}"><input class="button" type="button" value="Back to question" ></a>

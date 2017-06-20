@@ -3,6 +3,7 @@
 
 <head>
     <title>Ask Mate</title>
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
     <link rel="stylesheet" href="/static/display_a_question.css">
 </head>
 
@@ -12,45 +13,58 @@
 <div class="ask_new_question">
 <h3>Questions</h3>
 
-<form action="/new-question"><input class="button" type="submit" name="addnew" id ="addnew" value="Ask new Question"/></form>
+<form action="/new-question"><input class="button" type="submit" name="addnew" id ="addnew" value="Ask new Question"></form>
 </div>
-<table border="1">
-    {% for col in ['ID', 'Question', 'Date', 'Number of Views','Votes'] %}
-        <th>
-            {{col}} 
-            <a href="/extend/{{col}}?{{url}}">
-                {% if col + '=asc' in url %}
-                    <img src="/static/up.png" width="20"></img>
-                {% elif col + '=desc' in url %}
-                    <img src="/static/down.png" width="20"></img>
-                {% else %}
-                    <img src="/static/sort.png" width="20"></img>
-                {% endif %}
-            </a>
-        </th>
-    {% endfor %}
-        <th>Image</th>
-        <th>Edit</th>
-    </tr>
-    {% for question in questions%}
-        <tr>
-            <td>{{question.question_id}}.</td>
-            <td><a href="/question/{{question.question_id}}">{{question.title}}</a></td>
-            <td>{{question.submisson_time}}</td>
-            <td>{{question.view_number}}</td>
-            <td>{{question.vote_number}}</td>
-            <td><img src="{{question.image}}" width="40"</img></td>
-            <td>
-                <a href="/question/{{question.question_id}}/edit">
-                    <img src="/static/edit.png" width="20"></img>
-                </a>
-            </td>
-        </tr>
-    {% endfor %}
+    
+  
+    <p><h3>Users</h3>
+        <a href='/registration'><input class="button" type="button" name="addnew" value="Register"></a>
+        <a href='/list-users'><input class="button" type="button" name="listall" value="List all User"></a>
+        <a href='/tags'><input class="button" type="button" name="tags" value="List of tags"></a>
 
-    </tr>
-</table>
+    </p>
+    
+    <form action="/question/add_new_tag" method="POST">
+        <table border="1">
+            {% for col in ['ID', 'Question', 'Date', 'Number of Views','Votes'] %}
+                <th>
+                    {{col}} 
+                    <a href="/extendurl/{{col}}?{{url}}">
+                        {% if col + '=asc' in url %}
+                            <img src="/static/up.png" width="20"></img>
+                        {% elif col + '=desc' in url %}
+                            <img src="/static/down.png" width="20"></img>
+                        {% else %}
+                            <img src="/static/sort.png" width="20"></img>
+                        {% endif %}
+                    </a>
+                </th>
+            {% endfor %}
+                <th>Author</th>
+            </tr>
+            {% for question in questions%}
+                <tr>
+                    <td>{{question.question_id}}.</td>
+                    <td><a href="/question/{{question.question_id}}">{{question.title}}</a></td>
+                    <td>{{question.submission_time}}</td>
+                    <td>{{question.view_number}}</td>
+                    <td>{{question.vote_number}}</td>
+                    <td>{{question.user_name}}</td>
+                </tr>
+            {% endfor %}
 
+            </tr>
+        </table>
+
+        </selec>
+    </form>
+    <p id='search'>
+        <form action='/handlesearch'>
+            <label for='search'><h3>Search questions</h3></label>
+            <input type='text' class='text_box' id='search' name='search'>
+            <input class='button' type='submit' value='Search'>
+        </form>
+    </p>
 </body>
 
 </html>

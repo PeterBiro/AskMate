@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Ask Mate</title>
+        <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+        <link rel="stylesheet" href="/static/style2.css">
+    </head>
+
+    <body>
+
+        <div id="title">
+            <h1>Ask Mate</h1><p id="head">There is no bad question!</p>
+        </div>
+
+        <div class="content">
+            <h2>Questions</h2>
+            <form action="/new-question"><input class="bluebutton" type="submit" name="addnew" value="Ask new Question"></form>
+            
+            <div id="search">
+                <form action='/handlesearch'>
+                    <h3>Search questions</h3>
+                    <input type='text' name='search'>
+                    <input class="bluebutton" type='submit' value='Search'>
+                </form>
+            <div>
+        
+
+            <form action="/question/add_new_tag" method="POST">
+                <h3>Questions</h3>
+
+                <table>
+
+                    <tr>
+                    {% for col in ['Select','ID', 'Question', 'Date', 'Number of Views','Votes', 'Image', 'Edit', 'Tags'] %}
+                        <th>
+                            {{col}} 
+                            <a href="/extendurl/{{col}}?{{url}}">
+                                {% if col + '=asc' in url %}
+                                    <img src="/static/up.png" width="20"></img>
+                                {% elif col + '=desc' in url %}
+                                    <img src="/static/down.png" width="20"></img>
+                                {% else %}
+                                    <img src="/static/sort.png" width="20"></img>
+                                {% endif %}
+                            </a>
+                        </th>
+                    {% endfor %}
+                    </tr>
+
+                    {% for question in questions%}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="{{question.question_id}}" value="{{question.question_id}}">
+                            </td>
+                            <td>{{question.question_id}}.</td>
+                            <td><a href="/question/{{question.question_id}}">{{question.title}}</a></td>
+                            <td>{{question.submission_time}}</td>
+                            <td>{{question.view_number}}</td>
+                            <td>{{question.vote_number}}</td>
+                            <td><img src="{{question.image}}" width="40"</img></td>
+                            <td>
+                                <a href="/question/{{question.question_id}}/edit"><img src="/static/edit.png" width="20"></img></a>
+                            </td>
+                            <td>
+                                {% for tag in tags %}
+                                    {% if tag['question_id'] == question.question_id %}
+                                        <i class="fa fa-square" aria-hidden="true" style="color:{{ tag['color'] }};" ></i>{{ tag['name'] }}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+
+                <div id="tag">
+                    <h3>Tags</h3>
+                    <select name="selected_tag">
+                        {% for type in tags_type %}
+                            <option>
+                                {{ type['name'] }}
+                            </option>
+                        {% endfor %}
+                    </select>                    
+                    <input type="submit" class="bluebutton" value="Add tag"><a href="/question/create_new_tag"><input class="bluebutton" type="button" value="Create new tag"></a>            
+                </div>
+
+            </form>
+        </div>
+
+    </body>
+
+</html>

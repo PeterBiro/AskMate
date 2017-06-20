@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+    <link rel="stylesheet" href="/static/style2.css">
+    <title>Ask Mate</title>
+</head>
+
+<body>
+    <div id="title">
+        <h1>Ask Mate</h1><p id="head">There is no bad question!</p>
+    </div>
+    <!-- this displays the question -->
+    <div class="content">
+        <h2>Question</h2>
+        <table>  
+            <tr>
+                {% for name_title in question_with_answers.list_of_key_and_title_of_question %}
+                    <th>
+                        {{ name_title[1] }}
+                    </th>
+                {% endfor %}
+            </tr>    
+            <tr>
+                {% for key in question_with_answers.list_of_key_of_question %}
+                <td>
+                    {% if key == "vote_number" %}
+                        <a href="/question/{{ question_with_answers.question_id }}/vote-up">
+                            <i class="fa fa-angle-up" aria-hidden="true"></i>
+                        </a>
+                        {{ question_with_answers.question[key] }}
+                        <a href="/question/{{ question_with_answers.question_id }}/vote-down">
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </a>
+                    {% elif key == "image" %}
+                        <img src="{{ question_with_answers.question[key] }}" width="40"</img>
+                    {% else %}
+                        {{ question_with_answers.question[key] }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+        </table>
+        <div class="add_new">
+        <a href="/question/{{ question_with_answers.question_id }}/edit"><input class="bluebutton" type="button" value="Edit Question"></a>
+        <a href="/question/{{ question_with_answers.question_id }}/new-answer"><input class="bluebutton" type="button" value="New Answer"></a>
+        <a href="/"> <input class="bluebutton" type="button" value="Back to Questions"></a>
+        </div>
+        
+
+        <!-- this displays the comments for the question -->
+        <div class="comment">
+        {% for comment in q_comments %}
+            <h4>Comment</h4>
+            
+                <p>{{comment["message"]}}</p>
+                <p>@ {{comment["submission_time"]}} # {{comment["edited_count"]}}</p>
+                <a class="bluebutton" href="/comments/{{comment['id']}}/edit">Edit</a>
+                <a class="bluebutton" href="/comments/{{comment['id']}}/delete" >Delete</a></td>
+            
+        {% endfor %}
+         <div class="add_new">
+        <a href="/question/{{ question_with_answers.question_id }}/new-comment"> <input class="bluebutton" type="button" value="Add comment"></a>
+        </div>
+        </div>
+        <!-- Answers -->
+
+        {% for row in question_with_answers.answers %}
+
+            <h3>Answer</h3>
+
+            <table>
+            
+                <tr>
+                    {% for name_title in question_with_answers.list_of_key_and_title_of_answers %}
+
+                        {% if question_with_answers.direction == "DESC" %}
+                            <td>
+                                <a href="/question/{{ question_with_answers.question_id }}?sort_by={{ name_title[0] }}&direction=ASC">  {{name_title[1]}} </a>
+                            </td>
+                        {% else %}
+                            <td>
+                                <a href="/question/{{ question_with_answers.question_id }}?sort_by={{ name_title[0] }}&direction=DESC">  {{name_title[1]}} </a>
+                            </td>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </tr>
+                
+                <tr>
+                    {% for name in question_with_answers.list_of_key_of_answer %}
+                        <td>
+                            {% if name == "vote_number" %}
+                                <a href="/question/{{ question_with_answers.question_id }}/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/vote-up">
+                                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                                </a>
+                                {{  row[name] }}
+                                <a href="/question/{{ question_with_answers.question_id }}/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/vote-down">
+                                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                </a>
+                            {% elif name == "image" %}
+                                <img src="{{ name }}" width="40"</img>
+                            {% else %}
+                                {{ row[name] }} 
+                            {% endif %}
+                        </td>
+                    {% endfor%}
+                </tr>
+            </table>
+            <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/edit" ><input class="bluebutton" type="button" value="Edit"></a>
+            <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/delete" ><input class="bluebutton" type="button" value="Delete"></a>
+
+            <!-- comments for this answer -->
+            <div class="comment">
+                        
+                    {% for comment in a_comments %}
+
+                        {% if comment["answer_id"] == row["id"] %}
+
+                            <h4>Comment</h4>
+                            <p>{{comment["message"]}}</p>
+                            <p>@ {{comment["submission_time"]}} # {{comment["edited_count"]}}</p>
+                            <a href="/comments/{{ comment['id'] }}/edit" ><input class="bluebutton" type="button" value="Edit"></a>
+                            <a href="/comments/{{ comment['id'] }}/delete" ><input class="bluebutton" type="button" value="Delete"></a>
+                        
+                        {% endif %}
+                        
+                    {% endfor %}
+
+                <div class="add_new">
+                <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/new-comment"> <input class="bluebutton" type="button" value="Add comment"></a>
+                </div>
+            </div>
+            <!-- end comments section -->
+
+        {% endfor %}
+        <!-- end answers section -->
+
+        <div class="add_new">
+        <a href="#title"><input class="bluebutton" type="button" value="Up"></a>
+        <a href="/"> <input class="bluebutton" type="button" value="Back to Questions"></a>
+        </div>
+    </div>
+</body>
+
+</html>

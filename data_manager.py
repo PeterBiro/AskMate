@@ -1,113 +1,85 @@
-"""Data manager functions"""
-import base64
-import os
+import psycopg2
+from private_psql_settings import connectioon_triplets
 
 
-current_file_path = os.path.dirname(os.path.abspath(__file__))+"/data/"
-
-
-def encode_string(field):
-    """ Encode field, return b64.
+def safe_insert(table, column_list, value_list):
     """
-    return base64.b64encode(str.encode(field)).decode()
-
-
-def decode_string(field):
-    """ Decode field, return string
+    Almost safe INSERT INTO builder :)
+    Args:
+        @table: string - name of the table
+        @column_list: list of strings
+        @value_list: list of values to be inserted str/int/anything (hopefully)
     """
-    return base64.b64decode(str.encode(field)).decode()
+    try:
+        dbname, user, password = connectioon_triplets()
+        connect_str = "dbname='{}' user='{}' host='localhost' password='{}'".format(dbname, user, password)
+        connection = psycopg2.connect(connect_str)
+        cursor = connection.cursor()
+        connection.autocommit = True
+        cursor = connection.cursor()
+
+        placeholder = ", ".join(["%%s" for _ in range(len(value_list))])
+        query = "INSERT INTO %s ({0}) VALUES ({1})".format(", ".join(column_list), placeholder)
+        cursor.execute(query % table, value_list)
+
+        cursor.close()
+    except psycopg2.DatabaseError as exception:
+        print(exception)
+    finally:
+        if connection:
+            connection.close()
+    return
 
 
-def get_table_from_file(filename):
-    """Read data from file
+def run_query(query):
     """
-    with open(current_file_path+filename, "r") as file:
-        lines = file.readlines()
-    table = [element.replace("\n", "").split(",") for element in lines]
-    return table
-
-
-def write_table_to_file(table, filename):
-    """Write data to file
+    A single query from the localhost database.
+    Arg:
+        @query: string - a whole executable psql query
+    return:
+        - for SELECT: list of tuples
+        - in case of error: error message
+        - "Done :)" if non SELECT query executed without error
     """
-    with open(current_file_path+filename, "w") as file:
-        for record in table:
-            row = ','.join(record)
-            file.write(row + "\n")
+    try:
+        dbname, user, password = connectioon_triplets()
+        connect_str = "dbname='{}' user='{}' host='localhost' password='{}'".format(dbname, user, password)
+        connection = psycopg2.connect(connect_str)
+        cursor = connection.cursor()
+        connection.autocommit = True
+        cursor = connection.cursor()
+
+        cursor.execute(query)
+
+        if query.upper().find("SELECT") > -1:
+            rows = cursor.fetchall()
+        else:
+            rows = "Done :)"
+        cursor.close()
+
+    except psycopg2.DatabaseError as exception:
+        print(exception)
+        rows = exception
+
+    finally:
+        if connection:
+            connection.close()
+    return rows
 
 
-def get_dict(table_type, filename):
-    """Create dict from files\n
-    accepted table_type: 'answer' or 'question'\n
-    return list of dict of strings key and values
+def build_dict(table, key_words):
     """
-    table = get_table_from_file(filename)
-    return create_dict(table, table_type)
-
-
-def create_dict(table, table_type):
-    dict_table = []
-    if table_type == "answer":
-        for row in table:
-            dict_line = {}
-            dict_line["answer_id"] = row[0]
-            dict_line["submisson_time"] = row[1]
-            dict_line["vote_number"] = row[2]
-            dict_line["question_id"] = row[3]
-            dict_line["message"] = decode_string(row[4])
-            dict_line["image"] = decode_string(row[5])
-            dict_table.append(dict_line)
-    if table_type == "question":
-        for row in table:
-            dict_line = {}
-            dict_line["question_id"] = row[0]
-            dict_line["submisson_time"] = row[1]
-            dict_line["view_number"] = row[2]
-            dict_line["vote_number"] = row[3]
-            dict_line["title"] = decode_string(row[4])
-            dict_line["message"] = decode_string(row[5])
-            dict_line["image"] = decode_string(row[6])
-            dict_table.append(dict_line)
-    return dict_table
-
-
-def save_dict(table, table_type, filename):
-    """Save list to file\n
-    accepted table_type: 'answer' or 'question'\n
-    converts dict list to string list, encode and write to file.
+    Build a list of dictionaries with given keys.
+    Args:
+        @table: list of tuples (or lists)
+        @key_words: list of strings in the order of the element of tuples
+    Return:
+        list of dictionaries
     """
-    work_table = []
-    if table_type == "answer":
-        for row in table:
-            table_line = []
-            table_line.append(row["answer_id"])
-            table_line.append(row["submisson_time"])
-            table_line.append(row["vote_number"])
-            table_line.append(row["question_id"])
-            table_line.append(encode_string(row["message"]))
-            table_line.append(encode_string(row["image"]))
-            work_table.append(table_line)
-    if table_type == "question":
-        for row in table:
-            table_line = []
-            table_line.append(row["question_id"])
-            table_line.append(row["submisson_time"])
-            table_line.append(row["view_number"])
-            table_line.append(row["vote_number"])
-            table_line.append(encode_string(row["title"]))
-            table_line.append(encode_string(row["message"]))
-            table_line.append(encode_string(row["image"]))
-            work_table.append(table_line)
-    write_table_to_file(work_table, filename)
-
-
-def delete_file(path):
-    os.remove(path)
-
-
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
+    result = []
+    for row in table:
+        record = {}
+        for key, value in zip(key_words, row):
+            record[key] = value
+        result.append(record)
+    return result

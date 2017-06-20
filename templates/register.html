@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Register user</title>
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+    <link rel="stylesheet" href="/static/display_a_question.css">
+</head>
+
+<body>
+    <h1>Ask Mate</h1>
+    <form action='/registration/save_user' method='POST'>
+        
+        <label for='username'><h3>Name</h3></label>
+        <p><input type='text' name='username' id='username' required></p>
+        
+        <p><input type='submit' class="button" value='Register'>
+        <a href='/list' name='returnbutton'><input type='button' class="button" value='Return to Questions'></a></p>
+    </form>
+
+</body>
+
+</html>

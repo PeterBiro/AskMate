@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/style2.css">
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+    <title>Ask Mate</title>
+</head>
+<body>
+    <div id="title">
+        <h1>Ask Mate</h1><p id="head">There is no bad question!</p>
+    </div>
+    <div class="content">
+        <h2>Create new tag</h2>
+        <form action="/question/save_new_tag/<{{ rgb_color }}>" method='POST'>
+            <h3>Tag name</h3>
+            <p>Give the tag: <input type="text" name="new_tag_name"></p>
+            <h3>Color</h3>
+            <p>Give a color:</p>
+            <input type="number" name="red_color" maxlength="3" max="255" min="0" step="1"> Red 
+            <input type="number" name="green_color" maxlength="3" max="255" min="0" step="1"> Green
+            <input type="number" name="blue_color" maxlength="3" max="255" min="0" step="1">  Blue, or 
+            <a href="/question/create_new_tag"><input type="button" class="bluebutton" value="Generate random"></a>
+            <i class="fa fa-square" aria-hidden="true" style="color:{{ rgb_color }};font-size:40px"></i>
+            <br><input type="submit" class="bluebutton" value="Create new tag"><a href="/"><input class="bluebutton" type="button" value="Back"></a>
+        </form>
+    </div>
+
+</body>
+</html>

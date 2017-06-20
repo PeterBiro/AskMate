@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{title}} Comment</title>
+    <link rel="stylesheet" href="/static/display_a_question.css">
+</head>
+<body>
+    <h1>{{title}} Comment</h1>
+
+    {% if mode == 'Add_new' %}
+        <h2>The {{basis}} you write to comment upon:</h2>
+        <table border='1'><tr><td>{{content}}<td></tr></table>
+    {%endif%}
+    
+    {%if basis=='question' %}
+        <form action='/add_comment_to_db/question/{{question_id}}'>
+    {%elif basis=='answer' %}
+        <form action='/add_comment_to_db/answer/{{answer_id}}'>
+    {%elif basis=='comment' %}
+        <form action=/update_comment/{{comment_id}}>
+    {%endif%}
+
+        <label for="comment"><h3>Your comment:</h3></label>
+        <textarea class="text-box" name="comment" id="comment" rows="4" cols="46" minlength="10" autofocus>{{comment}}</textarea>
+        <p>Author: 
+        {% if mode == 'Add_new' %}
+            <select name="names">
+                {% for name in users %}
+                <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        {%else%}
+            {{ name }}
+        {%endif%}
+        </p>
+        <p>
+            <input class="button" type="submit" value="{{button}}">
+            <a href="/question/{{question_id}}"><input class="button" type="button" value="Back to question" ></a>
+        </p>
+    
+    </form>
+        
+</body>
+</html>

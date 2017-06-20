@@ -1,99 +1,192 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
-    <link rel="stylesheet" href="/static/display_a_question.css">
-</head>
-<body>
+    <head>
+        <link rel="stylesheet" href="/static/display_a_question.css">
+        <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+    </head>
 
+    <body>
 
-    <h1>
-        Quesion with Answers
-    </h1>
-    
-    <table border="1" >
-        <tr >
-            <th colspan="2" class="title">Quesion</th>
-            <th colspan="5" class="title class">Programing Languages</th>
-        </tr>  
-        <tr>
-            {% for name_title in question_with_answers.list_of_key_and_title_of_question %}
-                <th>
-                    {{ name_title[1] }}
-                </th>
-            {% endfor %}
-            <td class="action_button">
-                <a href="/question/{{ question_with_answers.question_id }}/delete"> <input class="btn" type="button" value="delete"></a>
-            </td>
-        </tr>
-        <tr>
-            <tr>
-                {% for key in question_with_answers.list_of_key_of_question %}
-                <td>
-                    {% if key == "vote_number" %}
-                        <a href="/question/{{ question_with_answers.question_id }}/vote-up">
-                            <i class="fa fa-angle-up" aria-hidden="true"></i>
-                        </a>
-                           {{ question_with_answers.question[key] }}
-                        <a href="/question/{{ question_with_answers.question_id }}/vote-down">
-                             <i class="fa fa-angle-down" aria-hidden="true"></i>
-                        </a>
-                    {% elif key == "image" %}
-                        <img src="{{ question_with_answers.question[key] }}" width="40"</img>
-                    {% else %}
-                        {{ question_with_answers.question[key] }}
+        <!-- this displays the question -->
+        <p>
+            <h2>Question</h2>
+            <p>
+                <table border="1">
+                    <tr>
+                        {% for name_title in question_with_answers.list_of_key_and_title_of_question %}
+                        <th>
+                            {{ name_title[1] }}
+                        </th>
+                        {% endfor %}
+                        <td class="action_button">
+                            <a href="/question/{{ question_with_answers.question_id }}/delete"> 
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </a>
+                            <a href="/question/{{ question_with_answers.question_id }}/edit">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <tr>
+                            {% for key in question_with_answers.list_of_key_of_question %}
+                            <td>
+                                {% if key == "vote_number" %}
+                                <a href="/question/{{ question_with_answers.question_id }}/vote-up" style="text-decoration:none;">
+                                <i class="fa fa-angle-up" aria-hidden="true"></i>
+                            </a> {{ question_with_answers.question[key] }}
+                                <a href="/question/{{ question_with_answers.question_id }}/vote-down" style="text-decoration:none;">
+                                <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a> {% elif key == "image" %}
+                                <img src="{{ question_with_answers.question[key] }}" width="40" </img> {% else %} {{ question_with_answers.question[key]
+                                }} {% endif %}
+                            </td>
+                            {% endfor %}
+
+                        </tr>
+                    </tr>
+                    {% if question_with_answers.tags%}
+                    <tr>
+                        <td colspan="6">
+                            {% for tag in question_with_answers.tags %}
+                            <a href="/question/{{ question_with_answers.question_id }}/tag/{{tag.tag_id}}/delete" style="text-decoration:none;">
+                                <i class="fa fa-times" aria-hidden="true" style="background-color:{{ tag.color }};color:black;"></i>
+                            </a>{{ tag.name }} {% endfor%}
+
+                        </td>
+                    </tr>
                     {% endif %}
-                </td>
-                {% endfor %}
-           
-            </tr>
-    </table>
+                </table>
 
-    <table border="1">
-        <tr >
-            <th colspan="2">Answers</th>
-            <th colspan="4">Programing Languages</th>
-        </tr>
-        <tr>
-            {% for name_title in question_with_answers.list_of_key_and_title_of_answers %}
-                {% if question_with_answers.direction == "down" %}
-                <td><a href="/question/{{ question_with_answers.question_id }}?sort_by={{ name_title[0] }}&direction=up">  {{name_title[1]}} <a></td>
-                {% else %}
-                <td><a href="/question/{{ question_with_answers.question_id }}?sort_by={{ name_title[0] }}&direction=down">  {{name_title[1]}} <a></td>
-            {% endif %}
-            {% endfor %}
-        </tr>
-        {% for row in question_with_answers.answers %}
-            <tr>
-                {% for name in question_with_answers.list_of_key_of_answer %}
-                <td>
-                    {% if name == "vote_number" %}
-                        <a href="/question/{{ question_with_answers.question_id }}/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/vote-up">
-                            <i class="fa fa-angle-up" aria-hidden="true"></i>
-                        </a>
-                           {{  row[name] }}
-                        <a href="/question/{{ question_with_answers.question_id }}/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/vote-down">
-                             <i class="fa fa-angle-down" aria-hidden="true"></i>
-                        </a>
-                    {% elif name == "image" %}
-                        <img src="{{ name }}" width="40"</img>
-                    {% else %}
-                        {{ row[name] }} 
-                    {% endif %}
-                </td>
-                {% endfor%}
-                <td class="action_button">
-                <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/edit" ><input class="btn" type="button" value="Edit"></a>
-                <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/delete" ><input class="btn" type="button" value="Delete"></a>
-                </td>
-            {% endfor %}
+                <!-- this displays the comments for the question -->
 
-            </tr>
-    </table>
-    <div class="add_new">
-    <a href="/question/{{ question_with_answers.question_id }}/new-answer"><input class="button" type="button" value="New Answer"></a><a href="/"> <input  class="button" type="button" value="Back to Questions"></a>
-    </div>
-</body>
+                {% if q_comments|length > 0 %}
+
+                <p>
+                    <h2>Comments</h2>
+                    <p>
+                        <table border="1" class="question-comment-table">
+
+                            <tr>
+                                <th>Comment</th>
+                                <th>Time</th>
+                                <th>Edited #</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+
+                            {% for comment in q_comments %}
+                            <tr>
+                                <td>{{comment["message"]}}</td>
+                                <td>{{comment["submission_time"]}}</td>
+                                <td>{{comment["edited_count"]}}</td>
+                                <td><a href="/comments/{{comment['id']}}/edit">Edit</a></td>
+                                <td><a href="/comments/{{comment['id']}}/delete">Delete</a></td>
+                            </tr>
+                            {% endfor %}
+
+                        </table>
+
+                        {% endif %}
+
+
+                        <p>
+                            <a href="/question/{{ question_with_answers.question_id }}/new-comment"> <input class="button" type="button" value="Add comment"></a>
+                        </p>
+
+
+                        <!-- Answers -->
+                        {% for row in question_with_answers.answers %}
+
+                        <p>
+                            <h2>Answer</h2>
+                            <p>
+
+                                <table border="1">
+
+                                    <tr>
+                                        {% for name_title in question_with_answers.list_of_key_and_title_of_answers %} {% if question_with_answers.direction == "DESC"
+                                        %}
+                                        <td>
+                                            <a href="/question/{{ question_with_answers.question_id }}?sort_by={{ name_title[0] }}&direction=ASC">  {{name_title[1]}} </a>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            <a href="/question/{{ question_with_answers.question_id }}?sort_by={{ name_title[0] }}&direction=DESC">  {{name_title[1]}} </a>
+                                        </td>
+                                        {% endif %} {% endfor %}
+
+                                    </tr>
+
+                                    <tr>
+                                        {% for name in question_with_answers.list_of_key_of_answer %}
+                                        <td>
+                                            {% if name == "vote_number" %}
+                                            <a href="/question/{{ question_with_answers.question_id }}/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/vote-up" style="text-decoration:none;">
+                                    <i class="fa fa-angle-up" aria-hidden="true"></i>
+                                </a> {{ row[name] }}
+                                            <a href="/question/{{ question_with_answers.question_id }}/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/vote-down" style="text-decoration:none;">
+                                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                </a> {% elif name == "image" %}
+                                            <img src="{{ name }}" width="40" </img> {% else %} {{ row[name] }} {% endif %}
+                                        </td>
+                                        {% endfor%}
+
+                                        <td class="action_button">
+                                            <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/edit"><input class="btn" type="button" value="Edit"></a>
+                                            <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/delete"><input class="btn" type="button" value="Delete"></a>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- comments for this answer -->
+
+                                {% if a_comments|length > 0 %}
+
+                                <p>
+                                    <h2>Comment</h2>
+                                    <p>
+                                        <table border="1" id="answer-comment-table" class="comment-table">
+                                            <tr>
+                                                <th>Comment</th>
+                                                <th>Time</th>
+                                                <th>Edited #</th>
+                                                <th></th>
+                                            </tr>
+
+                                            {% for comment in a_comments %}
+                                            {% if comment["answer_id"] == row["answer_id"] %}
+
+                                            <tr>
+                                                <td>{{comment["message"]}}</td>
+                                                <td>{{comment["submission_time"]}}</td>
+                                                <td>{{comment["edited_count"]}}</td>
+                                                <td class="action_button">
+                                                    <a href="/comments/{{ comment['id'] }}/edit"><input class="btn" type="button" value="Edit"></a>
+                                                    <a href="/comments/{{ comment['id'] }}/delete"><input class="btn" type="button" value="Delete"></a>
+                                                </td>
+                                            </tr>
+
+                                            {% endif %} {% endfor %}
+
+                                        </table>
+
+                                        {% endif %}
+                                        <p>
+                                            <a href="/answer/{{ row[question_with_answers.list_of_key_of_answer[0]] }}/new-comment"> <input class="button" type="button" value="Add comment"></a>
+                                        </p>
+
+                                        <!-- end comments section -->
+
+                                        {% endfor %}
+                                        <!-- end answers section -->
+
+                                        <div class="add_new">
+                                            <a href="/question/{{ question_with_answers.question_id }}/new-answer"><input class="button" type="button" value="New Answer"></a>
+                                            <a href="/"> <input  class="button" type="button" value="Back to Questions"></a>
+                                        </div>
+    </body>
 
 </html>

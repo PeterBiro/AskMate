@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/display_a_question.css">
+    <script src="https://use.fontawesome.com/51dda53a19.js"></script>
+    <title>Create new tag</title>
+</head>
+<body>
+    <h1>Create new tag</h1>
+    {% if tag_page %}
+        <form action="/question/save_new_tag/{{ rgb_color }}" method='POST'>
+    {% else %}
+        <form action="/question/save_new_tag/{{ rgb_color }}/{{ question_id }}" method='POST'>
+    {% endif %}
+        <h3>Name of new tag</h3>
+        <input type="text" name="new_tag_name" style="color:black">
+    {% if tag_page %}
+        <a href="/create_new_tag"><input type="button" class="button" value="Random Color" ></a>
+    {% else %}
+        <a href="/question/{{ question_id }}/create_new_tag"><input type="button" class="button" value="Random color"></a>
+    {% endif %}   
+        <i class="fa fa-square" aria-hidden="true" style="color:{{ rgb_color }};font-size:40px"></i><br><br>
+        <h3>Choose color</h3>
+        <input class="text-box" type="number" name="red_color" maxlength="3" max="255" min="0" step="1"> Red 
+        <input class="text-box" type="number" name="green_color" maxlength="3" max="255" min="0" step="1"> Green
+        <input class="text-box" type="number" name="blue_color" maxlength="3" max="255" min="0" step="1">  Blue 
+        <input type="submit" class="button" value="Create new tag">
+        {% if tag_page %}
+            <a href="/tags"><input type="button" class="button" value="Back to tags" ></a>
+        {% else %}
+            <a href="/question/{{ question_id }}/edit"><input type="button" class="button" value="Back to question" ></a>
+        {% endif %}
+    </form>
+
+</body>
+</html>
